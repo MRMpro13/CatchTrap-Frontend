@@ -16,10 +16,7 @@
 
     <div class="sensor-card__footer">
       <button class="btn-action" @click="handleAction('reboot')" :disabled="sensor.status === 'INACTIVE'">
-        Reiniciar Nodo
-      </button>
-      <button class="btn-action btn-outline" @click="handleAction('update')" :disabled="sensor.status === 'FAULT'">
-        Actualizar FW
+        Actualizar Nodo
       </button>
     </div>
   </article>
@@ -41,8 +38,6 @@ const formatDate = (value) => value ? new Date(value).toLocaleString() : '—';
 const handleAction = (action) => {
   if (action === 'reboot') {
     notify(`Comando de reinicio enviado al sensor ${props.sensor.id}.`, 'info', 'Reiniciando');
-  } else if (action === 'update') {
-    notify(`Descargando e instalando firmware en ${props.sensor.id}...`, 'info', 'Actualización OTA');
   }
 };
 </script>

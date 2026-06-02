@@ -3,8 +3,7 @@
     <section class="page-hero">
       <div>
         <span class="eyebrow">Monitoreo operativo</span>
-        <h1>Dashboard de Sensores</h1>
-        <p>Visualiza el estado de la red y su disponibilidad antes de pasar a backend real.</p>
+        <h1>Monitoreo de Sensores</h1>
       </div>
 
       <div class="hero-metrics">
@@ -37,6 +36,7 @@
       <div class="control-actions">
         <button class="btn-secondary" @click="resetFilters">Limpiar</button>
         <button class="btn-primary" @click="loadSensors">Refrescar</button>
+        <button class="btn-firmware" @click="checkFirmwareUpdate">Actualizar FW</button>
       </div>
     </section>
 
@@ -60,19 +60,35 @@
         <div v-else class="state-box">No hay sensores que coincidan con los filtros.</div>
       </div>
     </section>
+
+    <ConfirmDialog
+      v-model:visible="showFirmwareDialog"
+      title="Actualización de Firmware"
+      :message="firmwareDialogMessage"
+      confirm-text="Actualizar"
+      cancel-text="Cancelar"
+      @confirm="onFirmwareConfirm"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useSensorMonitoringStore } from '../../application/sensor-monitoring.store.js';
+import { SensorMonitoringApi } from '../../infrastructure/sensor-monitoring-api.js';
 import SensorCard from '../components/sensor-card.vue';
+import ConfirmDialog from '../../../shared/presentation/components/confirm-dialog.vue';
+import { notify } from '../../../shared/infrastructure/notify.js';
 
 const store = useSensorMonitoringStore();
 
 const searchQuery = ref('');
 const statusFilter = ref('ALL');
 const lastRefreshLabel = ref('Sin actualización');
+const showFirmwareDialog = ref(false);
+const firmwareDialogMessage = ref('');
+const pendingFirmwareVersion = ref('');
+const pendingOutdatedSensors = ref([]);
 
 const sensors = computed(() => store.sensors);
 const loading = computed(() => store.loading);
@@ -97,6 +113,61 @@ const loadSensors = async () => {
     lastRefreshLabel.value = new Date().toLocaleString();
   }
 };
+
+const sensorMonitoringApi = new SensorMonitoringApi();
+
+const checkFirmwareUpdate = async () => {
+  try {
+    const response = await sensorMonitoringApi.getLatestFirmwareVersion();
+    const latestVersion = response.data.version;
+    const outdatedSensors = sensors.value.filter(s => compareVersions(s.firmware, latestVersion) < 0);
+
+    if (outdatedSensors.length === 0) {
+      notify('Todos los sensores están actualizados.', 'success', 'Firmware');
+      return;
+    }
+
+    pendingFirmwareVersion.value = latestVersion;
+    pendingOutdatedSensors.value = outdatedSensors;
+    firmwareDialogMessage.value = `Hay ${outdatedSensors.length} sensor(es) desactualizado(s). ¿Desea actualizar a la versión ${latestVersion}?`;
+    showFirmwareDialog.value = true;
+  } catch {
+    notify('No se pudo verificar la última versión del firmware.', 'error', 'Error');
+  }
+};
+
+const onFirmwareConfirm = async () => {
+  const version = pendingFirmwareVersion.value;
+  const outdated = pendingOutdatedSensors.value;
+  const total = outdated.length;
+  let updated = 0;
+
+  for (const sensor of outdated) {
+    try {
+      await sensorMonitoringApi.updateSensor(sensor.id, { ...sensor, firmware: version });
+      updated++;
+    } catch {
+      notify(`Error al actualizar ${sensor.id}.`, 'error', 'Firmware');
+    }
+  }
+
+  pendingFirmwareVersion.value = '';
+  pendingOutdatedSensors.value = [];
+  await store.fetchSensors();
+  notify(`${updated} de ${total} sensor(es) actualizado(s) a versión ${version}.`, updated === total ? 'success' : 'info', 'Firmware');
+};
+
+function compareVersions(a, b) {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const na = pa[i] || 0;
+    const nb = pb[i] || 0;
+    if (na > nb) return 1;
+    if (na < nb) return -1;
+  }
+  return 0;
+}
 
 const resetFilters = () => {
   searchQuery.value = '';
@@ -125,10 +196,11 @@ onMounted(async () => {
 .control-group label { font-size: 0.9rem; font-weight: 700; color: var(--text-strong, #0f172a); }
 .control-group input, .control-group select { width: 100%; border: 1px solid var(--border-color, rgba(148, 163, 184, 0.28)); border-radius: 14px; padding: 0.9rem 1rem; font: inherit; background: rgba(255, 255, 255, 0.9); color: var(--text-strong, #0f172a); box-sizing: border-box; }
 .control-actions { display: flex; gap: 0.75rem; align-items: end; flex-wrap: wrap; }
-.btn-primary, .btn-secondary { border: none; border-radius: 14px; padding: 0.9rem 1rem; font: inherit; font-weight: 700; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; }
-.btn-primary:hover, .btn-secondary:hover { transform: translateY(-1px); }
+.btn-primary, .btn-secondary, .btn-firmware { border: none; border-radius: 14px; padding: 0.9rem 1rem; font: inherit; font-weight: 700; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; }
+.btn-primary:hover, .btn-secondary:hover, .btn-firmware:hover { transform: translateY(-1px); }
 .btn-primary { background: linear-gradient(135deg, var(--brand-primary, #0a64ff), var(--brand-secondary, #6c5ce7)); color: white; }
 .btn-secondary { background: rgba(10, 100, 255, 0.1); color: var(--brand-primary, #0a64ff); }
+.btn-firmware { background: linear-gradient(135deg, #0a9b61, #059669); color: white; }
 .table-surface { padding: 1.25rem; }
 .table-meta { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; color: var(--text-muted, #64748b); }
 .sensor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
