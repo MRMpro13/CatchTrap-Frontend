@@ -54,6 +54,7 @@
             v-for="sensor in filteredSensors"
             :key="sensor.id"
             :sensor="sensor"
+            @update-ping="onUpdatePing"
           />
         </div>
 
@@ -155,6 +156,19 @@ const onFirmwareConfirm = async () => {
   pendingOutdatedSensors.value = [];
   await store.fetchSensors();
   notify(`${updated} de ${total} sensor(es) actualizado(s) a versión ${version}.`, updated === total ? 'success' : 'info', 'Firmware');
+};
+
+const onUpdatePing = async (sensorId) => {
+  const sensor = sensors.value.find(s => s.id === sensorId);
+  if (!sensor) return;
+
+  try {
+    await sensorMonitoringApi.updateSensor(sensorId, { ...sensor, lastPing: new Date().toISOString() });
+    await store.fetchSensors();
+    notify(`Nodo ${sensorId} actualizado.`, 'success', 'Actualizar Nodo');
+  } catch {
+    notify(`Error al actualizar el nodo ${sensorId}.`, 'error', 'Actualizar Nodo');
+  }
 };
 
 function compareVersions(a, b) {
