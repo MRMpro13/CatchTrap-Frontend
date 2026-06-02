@@ -26,8 +26,8 @@ export class InfractionsApi extends BaseApi {
     return this.#infractionsEndpoint.getById(id);
   }
 
-  updateInfractionStatus(id, status) {
-    return this.http.patch(`${this.#infractionsEndpoint.endpointPath}/${id}`, { status });
+  updateInfraction(id, data) {
+    return this.#infractionsEndpoint.update(id, data);
   }
 
   createTicket(ticket) {

@@ -4,9 +4,7 @@
       <div class="hero-copy">
         <span class="eyebrow">Fiscalización en tiempo real</span>
         <h1>Panel de Validación de Infracciones</h1>
-        <p>
-          Revisa, filtra y procesa infracciones pendientes con una experiencia clara para pruebas del frontend.
-        </p>
+        <p>Revisa, filtra y procesa infracciones pendientes</p>
       </div>
 
       <div class="hero-metrics">
@@ -28,12 +26,12 @@
       </div>
 
       <div class="control-group">
-        <label for="status">Filtrar por estado</label>
-        <select id="status" v-model="statusFilter">
+        <label for="severity">Exceso de velocidad</label>
+        <select id="severity" v-model="severityFilter">
           <option value="ALL">Todos</option>
-          <option value="PENDING_VALIDATION">Pendientes</option>
-          <option value="VALIDATED">Validadas</option>
-          <option value="REJECTED">Descartadas</option>
+          <option value="medium">Medio (1-9 km/h)</option>
+          <option value="high">Alto (10-24 km/h)</option>
+          <option value="critical">Crítico (25+ km/h)</option>
         </select>
       </div>
 
@@ -71,18 +69,65 @@
     <section class="surface activity-card">
       <div class="card-header">
         <h2>Última actividad</h2>
-        <span>{{ lastRefreshLabel }}</span>
       </div>
 
-      <div class="toast-list" v-if="toasts.length">
+      <div class="activity-controls">
+        <div class="control-group">
+          <label for="activity-search">Buscar por placa o ID</label>
+          <input id="activity-search" v-model="activitySearch" type="search" placeholder="Ej: ABC-123 o INF-001" />
+        </div>
+        <div class="control-group">
+          <label for="activity-status">Estado</label>
+          <select id="activity-status" v-model="activityStatusFilter">
+            <option value="ALL">Todos</option>
+            <option value="VALIDATED">Validada</option>
+            <option value="REJECTED">Descartada</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrapper" v-if="filteredActivity.length">
+        <table class="activity-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Placa</th>
+              <th>Velocidad</th>
+              <th>Límite</th>
+              <th>Exceso</th>
+              <th>Fecha/Hora</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in filteredActivity" :key="item.id">
+              <td><strong>{{ item.id }}</strong></td>
+              <td><span class="plate-box">{{ item.plate }}</span></td>
+              <td>{{ item.speed }} km/h</td>
+              <td>{{ item.limit }} km/h</td>
+              <td><span :class="['badge', getSeverityClass(item)]">{{ getExcess(item) }} km/h</span></td>
+              <td>{{ formatDate(item.timestamp) }}</td>
+              <td>
+                <span :class="['status-pill', item.status.toLowerCase()]">
+                  {{ formatStatus(item.status) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div v-else class="state-box subtle">
+        Aún no hay actividad registrada.
+      </div>
+    </section>
+
+    <section v-if="toasts.length" class="surface toast-card">
+      <div class="toast-list">
         <article v-for="toast in toasts" :key="toast.id" :class="['toast-item', toast.type]">
           <strong v-if="toast.title">{{ toast.title }}</strong>
           <p>{{ toast.message }}</p>
         </article>
-      </div>
-
-      <div v-else class="state-box subtle">
-        Aún no hay notificaciones. Valida o descarta una infracción para ver el flujo completo.
       </div>
     </section>
   </div>
@@ -99,11 +144,14 @@ const store = useInfractionsStore();
 const visibleInfractions = ref([]);
 const errorMessage = ref('');
 const searchQuery = ref('');
-const statusFilter = ref('ALL');
+const severityFilter = ref('ALL');
+const activitySearch = ref('');
+const activityStatusFilter = ref('ALL');
 const currentPage = ref(1);
 const pageSize = 5;
 const processingId = ref('');
 const toasts = ref([]);
+const activityLog = ref([]);
 const lastRefreshLabel = ref('Sin actualizaciones aún');
 
 const totalInfractions = computed(() => visibleInfractions.value.length);
@@ -114,7 +162,7 @@ const paginatedInfractions = computed(() => {
 });
 const loading = computed(() => store.loading);
 
-watch([searchQuery, statusFilter], () => {
+watch([searchQuery, severityFilter], () => {
   currentPage.value = 1;
   refreshVisibleInfractions();
 });
@@ -123,6 +171,8 @@ onMounted(async () => {
   await fetchInfractions();
 });
 
+const formatDate = (value) => value ? new Date(value).toLocaleString() : '—';
+
 const formatStatus = (status) => {
   const labels = {
     PENDING_VALIDATION: 'Pendiente',
@@ -130,6 +180,16 @@ const formatStatus = (status) => {
     REJECTED: 'Descartada'
   };
   return labels[status] || status || 'Sin estado';
+};
+
+const getExcess = (infraction) => Math.max(0, (infraction.speed || 0) - (infraction.limit || 0));
+
+const getSeverityClass = (infraction) => {
+  const excess = getExcess(infraction);
+  if (excess >= 25) return 'critical';
+  if (excess >= 10) return 'high';
+  if (excess > 0) return 'medium';
+  return 'low';
 };
 
 const pushToast = (message, type = 'info', title = '') => {
@@ -147,13 +207,23 @@ const refreshVisibleInfractions = () => {
   const search = searchQuery.value.trim().toLowerCase();
   visibleInfractions.value = (store.infractions || []).filter((infraction) => {
     const matchesSearch = !search || infraction.id.toLowerCase().includes(search) || infraction.plate.toLowerCase().includes(search);
-    const matchesStatus = statusFilter.value === 'ALL' || infraction.status === statusFilter.value;
-    return matchesSearch && matchesStatus;
+    const matchesStatus = infraction.status === 'PENDING_VALIDATION';
+    const matchesSeverity = severityFilter.value === 'ALL' || getSeverityClass(infraction) === severityFilter.value;
+    return matchesSearch && matchesStatus && matchesSeverity;
   });
   if (currentPage.value > totalPages.value) {
     currentPage.value = totalPages.value;
   }
 };
+
+const filteredActivity = computed(() => {
+  const search = activitySearch.value.trim().toLowerCase();
+  return activityLog.value.filter((item) => {
+    const matchesSearch = !search || item.id.toLowerCase().includes(search) || item.plate.toLowerCase().includes(search);
+    const matchesStatus = activityStatusFilter.value === 'ALL' || item.status === activityStatusFilter.value;
+    return matchesSearch && matchesStatus;
+  });
+});
 
 const fetchInfractions = async () => {
   errorMessage.value = '';
@@ -164,13 +234,19 @@ const fetchInfractions = async () => {
   } else {
     store.infractions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     refreshVisibleInfractions();
+    loadActivityLog();
     lastRefreshLabel.value = `Actualizado el ${new Date().toLocaleString()}`;
   }
 };
 
+const loadActivityLog = () => {
+  const processed = store.infractions.filter(i => i.status !== 'PENDING_VALIDATION');
+  activityLog.value = processed.map(i => ({ ...i }));
+};
+
 const resetFilters = () => {
   searchQuery.value = '';
-  statusFilter.value = 'ALL';
+  severityFilter.value = 'ALL';
   currentPage.value = 1;
   refreshVisibleInfractions();
   pushToast('Filtros restablecidos.', 'success', 'Panel listo');
@@ -180,10 +256,20 @@ const validate = async (id, status) => {
   processingId.value = id;
   try {
     const result = await store.processValidation(id, status);
+    const infraction = store.infractions.find(i => i.id === id);
+    const label = formatStatus(status);
+    const details = infraction
+      ? `Infracción ${id} — ${infraction.plate} a ${infraction.speed} km/h.`
+      : `Infracción ${id}.`;
+
+    if (infraction) {
+      activityLog.value.unshift({ ...infraction, status });
+    }
+
     if (result.ticket) {
       pushToast(`Infracción ${id} validada. Ticket ${result.ticket.id} por S/. ${Number(result.ticket.amount).toFixed(2)}.`, 'success', 'Ticket generado');
     } else {
-      pushToast(`Infracción ${id} actualizada a estado ${formatStatus(status)}.`, 'info', 'Actualización realizada');
+      pushToast(`Infracción ${id} actualizada a estado ${label}.`, 'info', 'Actualización realizada');
     }
     await fetchInfractions();
   } catch (error) {
@@ -223,15 +309,36 @@ const validate = async (id, status) => {
 .state-error { color: #b42318; }
 .pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1rem; }
 .activity-card { margin-top: 1.25rem; padding: 1.25rem; }
-.card-header { display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 1rem; }
-.card-header h2 { margin: 0; }
-.card-header span { color: #64748b; font-size: 0.95rem; }
-.toast-list { display: grid; gap: 0.75rem; }
-.toast-item { padding: 1rem 1.1rem; border-radius: 16px; border: 1px solid transparent; background: rgba(255, 255, 255, 0.92); }
-.toast-item strong { display: block; margin-bottom: 0.25rem; }
+.activity-controls { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.activity-controls .control-group { display: flex; flex-direction: column; gap: 0.35rem; min-width: 200px; flex: 1; }
+.activity-controls .control-group label { font-size: 0.85rem; font-weight: 700; color: #0f172a; }
+.activity-controls .control-group input, .activity-controls .control-group select { width: 100%; border: 1px solid rgba(148, 163, 184, 0.28); border-radius: 12px; padding: 0.65rem 0.85rem; font: inherit; font-size: 0.9rem; background: rgba(255, 255, 255, 0.9); color: #0f172a; box-sizing: border-box; }
+.activity-card .table-wrapper { overflow: auto; border: 1px solid rgba(148, 163, 184, 0.28); border-radius: 18px; }
+.activity-card .activity-table { width: 100%; border-collapse: collapse; min-width: 850px; }
+.activity-card .activity-table th, .activity-card .activity-table td { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(148, 163, 184, 0.28); text-align: left; vertical-align: middle; }
+.activity-card .activity-table th { background: rgba(10, 100, 255, 0.05); color: #0f172a; font-size: 0.9rem; }
+.activity-card .activity-table tr:last-child td { border-bottom: none; }
+.activity-card .plate-box { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 0.25rem 0.5rem; border-radius: 6px; font-family: monospace; font-weight: bold; font-size: 1rem; display: inline-block; letter-spacing: 1px; color: #1e293b; }
+.activity-card .badge { display: inline-flex; align-items: center; justify-content: center; padding: 0.3rem 0.6rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+.activity-card .badge.low { background: rgba(10, 167, 103, 0.12); color: #0a9b61; }
+.activity-card .badge.medium { background: rgba(255, 183, 77, 0.18); color: #b36a00; }
+.activity-card .badge.high { background: rgba(251, 146, 60, 0.14); color: #c2410c; }
+.activity-card .badge.critical { background: rgba(244, 67, 54, 0.14); color: #c62828; }
+.activity-card .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+.activity-card .status-pill.validated { background: rgba(10, 167, 103, 0.12); color: #0a9b61; }
+.activity-card .status-pill.rejected { background: rgba(244, 67, 54, 0.12); color: #c62828; }
+
+.toast-card { margin-top: 1rem; padding: 1rem 1.25rem; }
+.toast-list { display: grid; gap: 0.6rem; }
+.toast-item { padding: 0.85rem 1rem; border-radius: 16px; border: 1px solid transparent; background: rgba(255, 255, 255, 0.92); }
+.toast-item strong { display: block; margin-bottom: 0.25rem; font-size: 0.9rem; }
+.toast-item p { margin: 0; font-size: 0.9rem; }
 .toast-item.success { border-color: rgba(10, 167, 103, 0.25); color: #0a7f4f; }
 .toast-item.error { border-color: rgba(244, 67, 54, 0.25); color: #b42318; }
 .toast-item.info { border-color: rgba(10, 100, 255, 0.2); color: #0f172a; }
+
+.card-header { display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 1rem; }
+.card-header h2 { margin: 0; }
 .subtle { background: rgba(10, 100, 255, 0.04); border-radius: 18px; }
 @media (max-width: 1024px) { .page-hero, .panel-controls, .card-header, .table-meta { grid-template-columns: 1fr; flex-direction: column; } .hero-metrics { width: 100%; grid-template-columns: 1fr 1fr; } .panel-controls { grid-template-columns: 1fr; } .control-actions { align-items: stretch; } .btn-primary, .btn-secondary { width: 100%; } }
 </style>

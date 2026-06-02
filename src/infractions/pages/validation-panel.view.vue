@@ -315,7 +315,8 @@ export default {
 .badge, .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700; }
 .badge.low { background: rgba(10, 167, 103, 0.12); color: #0a9b61; }
 .badge.medium { background: rgba(255, 183, 77, 0.18); color: #b36a00; }
-.badge.high, .badge.critical { background: rgba(244, 67, 54, 0.14); color: #c62828; }
+.badge.high { background: rgba(251, 146, 60, 0.14); color: #c2410c; }
+.badge.critical { background: rgba(244, 67, 54, 0.14); color: #c62828; }
 .status-pill.pending_validation { background: rgba(10, 100, 255, 0.12); color: #0a64ff; }
 .status-pill.validated { background: rgba(10, 167, 103, 0.12); color: #0a9b61; }
 .status-pill.rejected { background: rgba(244, 67, 54, 0.12); color: #c62828; }
