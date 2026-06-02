@@ -9,13 +9,13 @@
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
               </svg>
             </div>
-            <h3>Ubicación de {{ plate }}</h3>
+            <h3>{{ $t('mapDialog.location', { plate }) }}</h3>
           </div>
           <div class="modal-body">
             <div ref="mapContainer" class="map-container"></div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-close" @click="onClose">Cerrar</button>
+            <button class="btn btn-close" @click="onClose">{{ $t('mapDialog.close') }}</button>
           </div>
         </div>
       </div>
@@ -25,6 +25,7 @@
 
 <script setup>
 import { ref, watch, nextTick, onBeforeUnmount } from 'vue';
+import { useI18n } from 'vue-i18n';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -44,6 +45,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:visible', 'close']);
 
+const { t } = useI18n();
 const mapContainer = ref(null);
 let mapInstance = null;
 
@@ -76,7 +78,7 @@ function initMap() {
 
   L.marker([props.latitude, props.longitude])
     .addTo(mapInstance)
-    .bindPopup(`<strong>${props.plate}</strong><br/>Velocidad capturada aquí`)
+    .bindPopup(`<strong>${props.plate}</strong><br/>${t('mapDialog.speedCaptured')}`)
     .openPopup();
 
   setTimeout(() => mapInstance?.invalidateSize(), 250);
