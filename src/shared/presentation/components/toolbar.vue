@@ -2,7 +2,6 @@
   <header class="toolbar surface">
     <div class="brand">
       <router-link to="/" class="logo">CatchTrap</router-link>
-      <span class="brand-tag">{{ $t('toolbar.brandTag') }}</span>
     </div>
 
     <nav class="nav-links">
@@ -52,11 +51,6 @@ defineOptions({ name: 'TheToolbar' })
   font-size: 1.35rem;
   font-weight: 800;
   color: var(--text-strong, #0f172a);
-}
-
-.brand-tag {
-  font-size: 0.82rem;
-  color: var(--text-muted, #64748b);
 }
 
 .nav-links {

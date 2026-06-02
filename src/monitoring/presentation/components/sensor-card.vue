@@ -6,17 +6,17 @@
     </div>
 
     <div class="sensor-card__body">
-      <p><strong>Ubicación:</strong> {{ sensor.location }}</p>
-      <p><strong>Último ping:</strong> {{ formatDate(sensor.lastPing) }}</p>
-      <p><strong>Batería:</strong>
+      <p><strong>{{ $t('sensorCard.location') }}:</strong> {{ sensor.location }}</p>
+      <p><strong>{{ $t('sensorCard.lastPing') }}:</strong> {{ formatDate(sensor.lastPing) }}</p>
+      <p><strong>{{ $t('sensorCard.battery') }}:</strong>
         <span :class="{'text-danger': sensor.battery < 20}">{{ sensor.battery }}%</span>
       </p>
-      <p><strong>Firmware:</strong> v{{ sensor.firmware }}</p>
+      <p><strong>{{ $t('sensorCard.firmware') }}:</strong> v{{ sensor.firmware }}</p>
     </div>
 
     <div class="sensor-card__footer">
       <button class="btn-action" @click="handleAction('reboot')" :disabled="sensor.status === 'INACTIVE'">
-        Actualizar Nodo
+        {{ $t('sensorCard.updateNode') }}
       </button>
     </div>
   </article>

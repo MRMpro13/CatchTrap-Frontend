@@ -9,13 +9,13 @@
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
               </svg>
             </div>
-            <h3>Ubicación de Sensores</h3>
+            <h3>{{ $t('sensorMap.title') }}</h3>
           </div>
           <div class="modal-body">
             <div ref="mapContainer" class="map-container"></div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-close" @click="onClose">Cerrar</button>
+            <button class="btn btn-close" @click="onClose">{{ $t('sensorMap.close') }}</button>
           </div>
         </div>
       </div>

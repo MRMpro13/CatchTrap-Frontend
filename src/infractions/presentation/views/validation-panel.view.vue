@@ -2,18 +2,18 @@
   <div class="page-shell validation-shell">
     <section class="page-hero surface">
       <div class="hero-copy">
-        <span class="eyebrow">Fiscalización en tiempo real</span>
-        <h1>Panel de Validación de Infracciones</h1>
-        <p>Revisa, filtra y procesa infracciones pendientes</p>
+        <span class="eyebrow">{{ $t('infractions.eyebrow') }}</span>
+        <h1>{{ $t('infractions.title') }}</h1>
+        <p>{{ $t('infractions.description') }}</p>
       </div>
 
       <div class="hero-metrics">
         <article class="metric-card">
-          <span>Pendientes</span>
+          <span>{{ $t('infractions.pending') }}</span>
           <strong>{{ totalInfractions }}</strong>
         </article>
         <article class="metric-card metric-highlight">
-          <span>Página</span>
+          <span>{{ $t('infractions.page') }}</span>
           <strong>{{ currentPage }} / {{ totalPages }}</strong>
         </article>
       </div>
@@ -21,33 +21,33 @@
 
     <section class="surface panel-controls">
       <div class="control-group">
-        <label for="search">Buscar por placa o ID</label>
-        <input id="search" v-model="searchQuery" type="search" placeholder="Ej: ABC-123 o INF-001" />
+        <label for="search">{{ $t('infractions.searchLabel') }}</label>
+        <input id="search" v-model="searchQuery" type="search" :placeholder="$t('infractions.searchPlaceholder')" />
       </div>
 
       <div class="control-group">
-        <label for="severity">Exceso de velocidad</label>
+        <label for="severity">{{ $t('infractions.severityLabel') }}</label>
         <select id="severity" v-model="severityFilter">
-          <option value="ALL">Todos</option>
-          <option value="medium">Medio (1-9 km/h)</option>
-          <option value="high">Alto (10-24 km/h)</option>
-          <option value="critical">Crítico (25+ km/h)</option>
+          <option value="ALL">{{ $t('infractions.severityAll') }}</option>
+          <option value="medium">{{ $t('infractions.severityMedium') }}</option>
+          <option value="high">{{ $t('infractions.severityHigh') }}</option>
+          <option value="critical">{{ $t('infractions.severityCritical') }}</option>
         </select>
       </div>
 
       <div class="control-actions">
-        <button class="btn-secondary" @click="resetFilters">Limpiar filtros</button>
-        <button class="btn-primary" @click="fetchInfractions">Actualizar</button>
+        <button class="btn-secondary" @click="resetFilters">{{ $t('infractions.clearFilters') }}</button>
+        <button class="btn-primary" @click="fetchInfractions">{{ $t('infractions.refresh') }}</button>
       </div>
     </section>
 
     <section class="surface table-surface">
-      <div v-if="loading" class="state-box">Cargando infracciones...</div>
+      <div v-if="loading" class="state-box">{{ $t('infractions.loading') }}</div>
       <div v-else-if="errorMessage" class="state-box state-error">{{ errorMessage }}</div>
       <div v-else>
         <div class="table-meta">
-          <p>Mostrando {{ paginatedInfractions.length }} de {{ visibleInfractions.length }} registros.</p>
-          <p class="muted">Última actualización: {{ lastRefreshLabel }}</p>
+          <p>{{ $t('infractions.showing', { count: paginatedInfractions.length, total: visibleInfractions.length }) }}</p>
+          <p class="muted">{{ $t('infractions.lastUpdate', { date: lastRefreshLabel }) }}</p>
         </div>
 
         <infraction-table
@@ -56,32 +56,32 @@
           :processing-id="processingId"
           @validate="validate"
         />
-        <div v-else class="state-box">No hay infracciones que coincidan con los filtros aplicados.</div>
+        <div v-else class="state-box">{{ $t('infractions.noResults') }}</div>
 
         <div class="pagination" v-if="totalPages > 1">
-          <button class="btn-secondary" :disabled="currentPage === 1" @click="currentPage--">Anterior</button>
-          <span>Página {{ currentPage }} de {{ totalPages }}</span>
-          <button class="btn-secondary" :disabled="currentPage === totalPages" @click="currentPage++">Siguiente</button>
+          <button class="btn-secondary" :disabled="currentPage === 1" @click="currentPage--">{{ $t('infractions.previous') }}</button>
+          <span>{{ $t('infractions.pageOf', { current: currentPage, total: totalPages }) }}</span>
+          <button class="btn-secondary" :disabled="currentPage === totalPages" @click="currentPage++">{{ $t('infractions.next') }}</button>
         </div>
       </div>
     </section>
 
     <section class="surface activity-card">
       <div class="card-header">
-        <h2>Última actividad</h2>
+        <h2>{{ $t('infractions.activityTitle') }}</h2>
       </div>
 
       <div class="activity-controls">
         <div class="control-group">
-          <label for="activity-search">Buscar por placa o ID</label>
-          <input id="activity-search" v-model="activitySearch" type="search" placeholder="Ej: ABC-123 o INF-001" />
+          <label for="activity-search">{{ $t('infractions.activitySearchLabel') }}</label>
+          <input id="activity-search" v-model="activitySearch" type="search" :placeholder="$t('infractions.searchPlaceholder')" />
         </div>
         <div class="control-group">
-          <label for="activity-status">Estado</label>
+          <label for="activity-status">{{ $t('infractions.activityStatusLabel') }}</label>
           <select id="activity-status" v-model="activityStatusFilter">
-            <option value="ALL">Todos</option>
-            <option value="VALIDATED">Validada</option>
-            <option value="REJECTED">Descartada</option>
+            <option value="ALL">{{ $t('infractions.activityAll') }}</option>
+            <option value="VALIDATED">{{ $t('infractions.activityValidated') }}</option>
+            <option value="REJECTED">{{ $t('infractions.activityRejected') }}</option>
           </select>
         </div>
       </div>
@@ -90,13 +90,13 @@
         <table class="activity-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Placa</th>
-              <th>Velocidad</th>
-              <th>Límite</th>
-              <th>Exceso</th>
-              <th>Fecha/Hora</th>
-              <th>Estado</th>
+              <th>{{ $t('infractions.tableId') }}</th>
+              <th>{{ $t('infractions.tablePlate') }}</th>
+              <th>{{ $t('infractions.tableSpeed') }}</th>
+              <th>{{ $t('infractions.tableLimit') }}</th>
+              <th>{{ $t('infractions.tableExcess') }}</th>
+              <th>{{ $t('infractions.tableDateTime') }}</th>
+              <th>{{ $t('infractions.tableStatus') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -118,7 +118,7 @@
       </div>
 
       <div v-else class="state-box subtle">
-        Aún no hay actividad registrada.
+        {{ $t('infractions.noActivity') }}
       </div>
     </section>
 
@@ -135,11 +135,13 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useInfractionsStore } from '../../application/infractions.store.js';
 import { notify } from '../../../shared/infrastructure/notify.js';
 import InfractionTable from '../components/infraction-table.vue';
 
 const store = useInfractionsStore();
+const { t } = useI18n();
 
 const visibleInfractions = ref([]);
 const errorMessage = ref('');
@@ -152,7 +154,7 @@ const pageSize = 5;
 const processingId = ref('');
 const toasts = ref([]);
 const activityLog = ref([]);
-const lastRefreshLabel = ref('Sin actualizaciones aún');
+const lastRefreshLabel = ref(t('infractions.noUpdate'));
 
 const totalInfractions = computed(() => visibleInfractions.value.length);
 const totalPages = computed(() => Math.max(1, Math.ceil(visibleInfractions.value.length / pageSize)));
@@ -175,11 +177,11 @@ const formatDate = (value) => value ? new Date(value).toLocaleString() : '—';
 
 const formatStatus = (status) => {
   const labels = {
-    PENDING_VALIDATION: 'Pendiente',
-    VALIDATED: 'Validada',
-    REJECTED: 'Descartada'
+    PENDING_VALIDATION: t('infractions.statusPending'),
+    VALIDATED: t('infractions.statusValidated'),
+    REJECTED: t('infractions.statusRejected')
   };
-  return labels[status] || status || 'Sin estado';
+  return labels[status] || status || t('infractions.statusUnknown');
 };
 
 const getExcess = (infraction) => Math.max(0, (infraction.speed || 0) - (infraction.limit || 0));
@@ -229,13 +231,13 @@ const fetchInfractions = async () => {
   errorMessage.value = '';
   await store.fetchInfractions();
   if (store.errors.length) {
-    errorMessage.value = 'No fue posible cargar las infracciones desde el mock server.';
-    pushToast('No se pudieron cargar las infracciones.', 'error', 'Error de carga');
+    errorMessage.value = t('infractions.fetchError');
+    pushToast(t('infractions.fetchErrorToast'), 'error', t('infractions.loadErrorTitle'));
   } else {
     store.infractions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     refreshVisibleInfractions();
     loadActivityLog();
-    lastRefreshLabel.value = `Actualizado el ${new Date().toLocaleString()}`;
+    lastRefreshLabel.value = t('infractions.updatedAt', { date: new Date().toLocaleString() });
   }
 };
 
@@ -249,7 +251,7 @@ const resetFilters = () => {
   severityFilter.value = 'ALL';
   currentPage.value = 1;
   refreshVisibleInfractions();
-  pushToast('Filtros restablecidos.', 'success', 'Panel listo');
+  pushToast(t('infractions.filtersReset'), 'success', t('infractions.panelReady'));
 };
 
 const validate = async (id, status) => {
@@ -259,22 +261,22 @@ const validate = async (id, status) => {
     const infraction = store.infractions.find(i => i.id === id);
     const label = formatStatus(status);
     const details = infraction
-      ? `Infracción ${id} — ${infraction.plate} a ${infraction.speed} km/h.`
-      : `Infracción ${id}.`;
+      ? t('infractions.validationDetail', { id, plate: infraction.plate, speed: infraction.speed })
+      : `${t('infractions.tableId')} ${id}.`;
 
     if (infraction) {
       activityLog.value.unshift({ ...infraction, status });
     }
 
     if (result.ticket) {
-      pushToast(`Infracción ${id} validada. Ticket ${result.ticket.id} por S/. ${Number(result.ticket.amount).toFixed(2)}.`, 'success', 'Ticket generado');
+      pushToast(t('infractions.validatedTicket', { id, ticketId: result.ticket.id, amount: Number(result.ticket.amount).toFixed(2) }), 'success', t('infractions.ticketGenerated'));
     } else {
-      pushToast(`Infracción ${id} actualizada a estado ${label}.`, 'info', 'Actualización realizada');
+      pushToast(t('infractions.statusUpdated', { id, status: label }), 'info', t('infractions.updateDone'));
     }
     await fetchInfractions();
   } catch (error) {
     console.error('Error validating infraction:', error);
-    pushToast('Ocurrió un error al procesar la validación.', 'error', 'Operación fallida');
+    pushToast(t('infractions.validationError'), 'error', t('infractions.operationFailed'));
   } finally {
     processingId.value = '';
   }
