@@ -2,23 +2,25 @@
   <header class="toolbar surface">
     <div class="brand">
       <router-link to="/" class="logo">CatchTrap</router-link>
-      <span class="brand-tag">Frontend sandbox</span>
+      <span class="brand-tag">{{ $t('toolbar.brandTag') }}</span>
     </div>
 
     <nav class="nav-links">
-      <router-link to="/" exact-active-class="is-active">Inicio</router-link>
-      <router-link to="/monitoring" active-class="is-active">Monitoreo</router-link>
-      <router-link to="/infractions" active-class="is-active">Infracciones</router-link>
-      <router-link to="/citizen" active-class="is-active">Ciudadano</router-link>
-      <router-link to="/analytics" active-class="is-active">Reportes</router-link>
+      <router-link to="/" exact-active-class="is-active">{{ $t('toolbar.home') }}</router-link>
+      <router-link to="/monitoring" active-class="is-active">{{ $t('toolbar.monitoring') }}</router-link>
+      <router-link to="/infractions" active-class="is-active">{{ $t('toolbar.infractions') }}</router-link>
+      <router-link to="/citizen" active-class="is-active">{{ $t('toolbar.citizen') }}</router-link>
+      <router-link to="/analytics" active-class="is-active">{{ $t('toolbar.analytics') }}</router-link>
+      <language-switcher />
     </nav>
   </header>
 </template>
 
-<script>
-export default {
-  name: 'TheToolbar'
-}
+<script setup>
+import { defineOptions } from 'vue'
+import LanguageSwitcher from './language-switcher.vue'
+
+defineOptions({ name: 'TheToolbar' })
 </script>
 
 <style scoped>
