@@ -2,11 +2,11 @@
   <article class="report-card">
     <div class="report-card__header">
       <span class="eyebrow small">{{ report.id }}</span>
-      <button class="btn-download" @click="$emit('download', report)">Descargar PDF</button>
+      <button class="btn-download" @click="$emit('download', report)">{{ $t('reportCard.download') }}</button>
     </div>
     <h3>{{ report.title }}</h3>
-    <p><strong>Fecha:</strong> {{ report.date }}</p>
-    <p><strong>Total de infracciones:</strong> {{ report.totalInfractions }}</p>
+    <p><strong>{{ $t('reportCard.date') }}:</strong> {{ report.date }}</p>
+    <p><strong>{{ $t('reportCard.total') }}:</strong> {{ report.totalInfractions }}</p>
   </article>
 </template>
 

@@ -3,13 +3,13 @@
     <table class="infractions-table">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Placa</th>
-          <th>Velocidad</th>
-          <th>Límite</th>
-          <th>Exceso</th>
-          <th>Fecha/Hora</th>
-          <th>Acciones</th>
+          <th>{{ $t('infractions.tableId') }}</th>
+          <th>{{ $t('infractions.tablePlate') }}</th>
+          <th>{{ $t('infractions.tableSpeed') }}</th>
+          <th>{{ $t('infractions.tableLimit') }}</th>
+          <th>{{ $t('infractions.tableExcess') }}</th>
+          <th>{{ $t('infractions.tableDateTime') }}</th>
+          <th>{{ $t('infractions.tableActions') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -25,13 +25,13 @@
           <td>
             <div class="action-group">
               <button class="btn-evidence" @click="openMap(infraction)">
-                Evidencia
+                {{ $t('infractionTable.evidence') }}
               </button>
               <button class="btn-validate" :disabled="processingId === infraction.id" @click="$emit('validate', infraction.id, 'VALIDATED')">
-                {{ processingId === infraction.id ? 'Procesando...' : 'Validar' }}
+                {{ processingId === infraction.id ? $t('infractionTable.processing') : $t('infractionTable.validate') }}
               </button>
               <button class="btn-reject" :disabled="processingId === infraction.id" @click="$emit('validate', infraction.id, 'REJECTED')">
-                Descartar
+                {{ $t('infractionTable.reject') }}
               </button>
             </div>
           </td>

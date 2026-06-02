@@ -2,17 +2,17 @@
   <div class="page-shell monitoring-shell">
     <section class="page-hero">
       <div>
-        <span class="eyebrow">Monitoreo operativo</span>
-        <h1>Monitoreo de Sensores</h1>
+        <span class="eyebrow">{{ $t('monitoring.eyebrow') }}</span>
+        <h1>{{ $t('monitoring.title') }}</h1>
       </div>
 
       <div class="hero-metrics">
         <article class="metric-card">
-          <span>Total sensores</span>
+          <span>{{ $t('monitoring.totalSensors') }}</span>
           <strong>{{ sensors.length }}</strong>
         </article>
         <article class="metric-card metric-highlight">
-          <span>Operativos</span>
+          <span>{{ $t('monitoring.operative') }}</span>
           <strong>{{ operativeCount }}</strong>
         </article>
       </div>
@@ -20,32 +20,32 @@
 
     <section class="surface panel-controls">
       <div class="control-group">
-        <label for="sensor-search">Buscar sensor</label>
-        <input id="sensor-search" v-model="searchQuery" type="search" placeholder="ID, ubicación o estado" />
+        <label for="sensor-search">{{ $t('monitoring.searchLabel') }}</label>
+        <input id="sensor-search" v-model="searchQuery" type="search" :placeholder="$t('monitoring.searchPlaceholder')" />
       </div>
       <div class="control-group">
-        <label for="sensor-status">Estado</label>
+        <label for="sensor-status">{{ $t('monitoring.statusLabel') }}</label>
         <select id="sensor-status" v-model="statusFilter">
-          <option value="ALL">Todos</option>
-          <option value="OPERATIVE">Operativo</option>
-          <option value="MAINTENANCE">Mantenimiento</option>
-          <option value="INACTIVE">Inactivo</option>
+          <option value="ALL">{{ $t('monitoring.statusAll') }}</option>
+          <option value="OPERATIVE">{{ $t('monitoring.statusOperative') }}</option>
+          <option value="MAINTENANCE">{{ $t('monitoring.statusMaintenance') }}</option>
+          <option value="INACTIVE">{{ $t('monitoring.statusInactive') }}</option>
         </select>
       </div>
       <div class="control-actions">
-        <button class="btn-secondary" @click="resetFilters">Limpiar</button>
-        <button class="btn-map" @click="showSensorMap = true">Mapa de Sensores</button>
-        <button class="btn-firmware" @click="checkFirmwareUpdate">Actualizar FW</button>
+        <button class="btn-secondary" @click="resetFilters">{{ $t('monitoring.clearFilters') }}</button>
+        <button class="btn-map" @click="showSensorMap = true">{{ $t('monitoring.mapButton') }}</button>
+        <button class="btn-firmware" @click="checkFirmwareUpdate">{{ $t('monitoring.firmwareButton') }}</button>
       </div>
     </section>
 
     <section class="surface table-surface">
-      <div v-if="loading" class="state-box">Cargando sensores...</div>
-      <div v-else-if="errors.length" class="state-box state-error">Ocurrió un error al cargar los sensores.</div>
+      <div v-if="loading" class="state-box">{{ $t('monitoring.loading') }}</div>
+      <div v-else-if="errors.length" class="state-box state-error">{{ $t('monitoring.loadError') }}</div>
       <div v-else>
         <div class="table-meta">
-          <p>Mostrando {{ filteredSensors.length }} sensores.</p>
-          <p>Última actualización: {{ lastRefreshLabel }}</p>
+          <p>{{ $t('monitoring.showing', { count: filteredSensors.length }) }}</p>
+          <p>{{ $t('monitoring.lastUpdate', { date: lastRefreshLabel }) }}</p>
         </div>
 
         <div class="sensor-grid" v-if="filteredSensors.length">
@@ -57,16 +57,16 @@
           />
         </div>
 
-        <div v-else class="state-box">No hay sensores que coincidan con los filtros.</div>
+        <div v-else class="state-box">{{ $t('monitoring.noResults') }}</div>
       </div>
     </section>
 
     <ConfirmDialog
       v-model:visible="showFirmwareDialog"
-      title="Actualización de Firmware"
+      :title="$t('monitoring.firmwareDialogTitle')"
       :message="firmwareDialogMessage"
-      confirm-text="Actualizar"
-      cancel-text="Cancelar"
+      :confirm-text="$t('monitoring.firmwareConfirmText')"
+      :cancel-text="$t('monitoring.firmwareCancelText')"
       @confirm="onFirmwareConfirm"
     />
 
@@ -79,6 +79,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useSensorMonitoringStore } from '../../application/sensor-monitoring.store.js';
 import { SensorMonitoringApi } from '../../infrastructure/sensor-monitoring-api.js';
 import SensorCard from '../components/sensor-card.vue';
@@ -87,10 +88,11 @@ import ConfirmDialog from '../../../shared/presentation/components/confirm-dialo
 import { notify } from '../../../shared/infrastructure/notify.js';
 
 const store = useSensorMonitoringStore();
+const { t } = useI18n();
 
 const searchQuery = ref('');
 const statusFilter = ref('ALL');
-const lastRefreshLabel = ref('Sin actualización');
+const lastRefreshLabel = ref(t('monitoring.noUpdate'));
 const showSensorMap = ref(false);
 const showFirmwareDialog = ref(false);
 const firmwareDialogMessage = ref('');
@@ -130,16 +132,16 @@ const checkFirmwareUpdate = async () => {
     const outdatedSensors = sensors.value.filter(s => compareVersions(s.firmware, latestVersion) < 0);
 
     if (outdatedSensors.length === 0) {
-      notify('Todos los sensores están actualizados.', 'success', 'Firmware');
+      notify(t('monitoring.firmwareAllUpToDate'), 'success', t('monitoring.firmwareNotifyTitle'));
       return;
     }
 
     pendingFirmwareVersion.value = latestVersion;
     pendingOutdatedSensors.value = outdatedSensors;
-    firmwareDialogMessage.value = `Hay ${outdatedSensors.length} sensor(es) desactualizado(s). ¿Desea actualizar a la versión ${latestVersion}?`;
+    firmwareDialogMessage.value = t('monitoring.firmwareDialogMessage', { count: outdatedSensors.length, version: latestVersion });
     showFirmwareDialog.value = true;
   } catch {
-    notify('No se pudo verificar la última versión del firmware.', 'error', 'Error');
+    notify(t('monitoring.firmwareCheckError'), 'error', t('monitoring.firmwareNotifyTitle'));
   }
 };
 
@@ -154,14 +156,14 @@ const onFirmwareConfirm = async () => {
       await sensorMonitoringApi.updateSensor(sensor.id, { ...sensor, firmware: version });
       updated++;
     } catch {
-      notify(`Error al actualizar ${sensor.id}.`, 'error', 'Firmware');
+      notify(t('monitoring.firmwareUpdateError', { id: sensor.id }), 'error', t('monitoring.firmwareNotifyTitle'));
     }
   }
 
   pendingFirmwareVersion.value = '';
   pendingOutdatedSensors.value = [];
   await store.fetchSensors();
-  notify(`${updated} de ${total} sensor(es) actualizado(s) a versión ${version}.`, updated === total ? 'success' : 'info', 'Firmware');
+  notify(t('monitoring.firmwareUpdateResult', { updated, total, version }), updated === total ? 'success' : 'info', t('monitoring.firmwareNotifyTitle'));
 };
 
 const onUpdatePing = async (sensorId) => {
@@ -171,9 +173,9 @@ const onUpdatePing = async (sensorId) => {
   try {
     await sensorMonitoringApi.updateSensor(sensorId, { ...sensor, lastPing: new Date().toISOString() });
     await store.fetchSensors();
-    notify(`Nodo ${sensorId} actualizado.`, 'success', 'Actualizar Nodo');
+    notify(t('monitoring.nodeUpdated', { id: sensorId }), 'success', t('monitoring.updateNodeNotifyTitle'));
   } catch {
-    notify(`Error al actualizar el nodo ${sensorId}.`, 'error', 'Actualizar Nodo');
+    notify(t('monitoring.nodeUpdateError', { id: sensorId }), 'error', t('monitoring.updateNodeNotifyTitle'));
   }
 };
 

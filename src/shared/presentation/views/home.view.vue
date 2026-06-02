@@ -8,15 +8,15 @@
       <div class="hero-actions">
         <router-link to="/monitoring" class="btn-primary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-          Monitoreo
+          {{ $t('home.monitoring') }}
         </router-link>
         <router-link to="/infractions" class="btn-secondary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Infracciones
+          {{ $t('home.infractions') }}
         </router-link>
         <router-link to="/analytics" class="btn-secondary">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-          Reportes
+          {{ $t('home.reports') }}
         </router-link>
       </div>
     </section>
@@ -27,7 +27,7 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-label">Sensores</span>
+          <span class="kpi-label">{{ $t('home.sensorsLabel') }}</span>
           <strong class="kpi-value">{{ totalSensors }}</strong>
           <span class="kpi-sub">
             <span class="badge-dot dot-ok"></span> {{ operativeSensors }}
@@ -42,10 +42,10 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-label">Infracciones</span>
+          <span class="kpi-label">{{ $t('home.infractionsLabel') }}</span>
           <strong class="kpi-value">{{ totalInfractions }}</strong>
           <span class="kpi-sub">
-            {{ pendingInfractions }} pendiente(s) · {{ validatedInfractions }} validadas
+            {{ $t('home.pending', { count: pendingInfractions, validated: validatedInfractions }) }}
           </span>
         </div>
       </article>
@@ -55,7 +55,7 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-label">Reportes</span>
+          <span class="kpi-label">{{ $t('home.reportsLabel') }}</span>
           <strong class="kpi-value">{{ totalReports }}</strong>
           <span v-if="latestReport" class="kpi-sub">{{ latestReport.title }}</span>
         </div>
@@ -66,7 +66,7 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-label">Salud de Red</span>
+          <span class="kpi-label">{{ $t('home.healthLabel') }}</span>
           <strong class="kpi-value" :class="healthColorClass">{{ Math.round(sensorHealthPercent) }}%</strong>
           <div class="mini-bar">
             <div class="mini-bar-fill" :style="{ width: sensorHealthPercent + '%' }"></div>
@@ -81,9 +81,9 @@
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
         </div>
         <div class="module-body">
-          <h3>Monitoreo de Sensores</h3>
-          <p>{{ totalSensors }} sensores &middot; {{ operativeSensors }} operativos</p>
-          <span class="module-link">Ir al panel →</span>
+          <h3>{{ $t('home.moduleMonitoring') }}</h3>
+          <p>{{ $t('home.sensorSummary', { total: totalSensors, operative: operativeSensors }) }}</p>
+          <span class="module-link">{{ $t('home.goToPanel') }}</span>
         </div>
       </router-link>
 
@@ -92,9 +92,9 @@
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
         <div class="module-body">
-          <h3>Validación de Infracciones</h3>
-          <p>{{ pendingInfractions }} pendientes de revisar</p>
-          <span class="module-link">Ir al panel →</span>
+          <h3>{{ $t('home.moduleInfractions') }}</h3>
+          <p>{{ $t('home.pendingReview', { count: pendingInfractions }) }}</p>
+          <span class="module-link">{{ $t('home.goToPanel') }}</span>
         </div>
       </router-link>
 
@@ -103,10 +103,10 @@
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
         </div>
         <div class="module-body">
-          <h3>Reportes Estadísticos</h3>
-          <p v-if="latestReport">Último: {{ latestReport.title }}</p>
-          <p v-else>{{ totalReports }} reporte(s) generados</p>
-          <span class="module-link">Ir al panel →</span>
+          <h3>{{ $t('home.moduleReports') }}</h3>
+          <p v-if="latestReport">{{ $t('home.latestReport', { title: latestReport.title }) }}</p>
+          <p v-else>{{ $t('home.reportsGenerated', { count: totalReports }) }}</p>
+          <span class="module-link">{{ $t('home.goToPanel') }}</span>
         </div>
       </router-link>
 
@@ -115,9 +115,9 @@
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
         <div class="module-body">
-          <h3>Portal Ciudadano</h3>
-          <p>Consulta de multas y pagos</p>
-          <span class="module-link">Ir al portal →</span>
+          <h3>{{ $t('home.moduleCitizen') }}</h3>
+          <p>{{ $t('home.citizenDescription') }}</p>
+          <span class="module-link">{{ $t('home.goToPortal') }}</span>
         </div>
       </router-link>
     </section>
