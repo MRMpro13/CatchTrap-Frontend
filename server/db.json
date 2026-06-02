@@ -289,6 +289,12 @@
       "issuedAt": "2026-06-02T05:17:03.863Z"
     }
   ],
+  "firmware": [
+    {
+      "id": "latest",
+      "version": "1.2.0"
+    }
+  ],
   "reports": [
     {
       "id": "REP-001",
