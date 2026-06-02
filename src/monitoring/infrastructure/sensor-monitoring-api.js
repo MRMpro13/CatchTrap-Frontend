@@ -21,10 +21,10 @@ export class SensorMonitoringApi extends BaseApi {
   }
 
   getLatestFirmwareVersion() {
-    return this.#firmwareEndpoint.getById("latest");
+    return this.#firmwareEndpoint.getAll();
   }
 
-  updateSensor(id, data) {
-    return this.#sensorsEndpoint.update(id, data);
+  patchSensor(id, data) {
+    return this.#sensorsEndpoint.patch(id, data);
   }
 }

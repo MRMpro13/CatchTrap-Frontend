@@ -128,7 +128,7 @@ const sensorMonitoringApi = new SensorMonitoringApi();
 const checkFirmwareUpdate = async () => {
   try {
     const response = await sensorMonitoringApi.getLatestFirmwareVersion();
-    const latestVersion = response.data.version;
+    const latestVersion = response.data[0]?.version;
     const outdatedSensors = sensors.value.filter(s => compareVersions(s.firmware, latestVersion) < 0);
 
     if (outdatedSensors.length === 0) {
@@ -153,7 +153,7 @@ const onFirmwareConfirm = async () => {
 
   for (const sensor of outdated) {
     try {
-      await sensorMonitoringApi.updateSensor(sensor.id, { ...sensor, firmware: version });
+      await sensorMonitoringApi.patchSensor(sensor.id, { ...sensor, firmware: version });
       updated++;
     } catch {
       notify(t('monitoring.firmwareUpdateError', { id: sensor.id }), 'error', t('monitoring.firmwareNotifyTitle'));
@@ -171,7 +171,7 @@ const onUpdatePing = async (sensorId) => {
   if (!sensor) return;
 
   try {
-    await sensorMonitoringApi.updateSensor(sensorId, { ...sensor, lastPing: new Date().toISOString() });
+    await sensorMonitoringApi.patchSensor(sensorId, { ...sensor, lastPing: new Date().toISOString() });
     await store.fetchSensors();
     notify(t('monitoring.nodeUpdated', { id: sensorId }), 'success', t('monitoring.updateNodeNotifyTitle'));
   } catch {
