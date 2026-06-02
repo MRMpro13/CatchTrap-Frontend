@@ -4,7 +4,6 @@
       <div>
         <span class="eyebrow">Analítica y simulación</span>
         <h1>Reportes Estadísticos</h1>
-        <p>Una vista más limpia para revisar indicadores y validar la experiencia del frontend.</p>
       </div>
 
       <div class="hero-metrics">
