@@ -52,7 +52,7 @@ const handleAction = () => {
 .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
 .operative { background: rgba(10, 167, 103, 0.12); color: #0a9b61; }
 .maintenance { background: rgba(255, 183, 77, 0.18); color: #b36a00; }
-.inactive, .fault { background: rgba(244, 67, 54, 0.12); color: #c62828; }
+.inactive { background: rgba(244, 67, 54, 0.12); color: #c62828; }
 
 .sensor-card__footer { margin-top: auto; padding-top: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .btn-action { flex: 1; border: none; border-radius: 12px; padding: 0.65rem; font: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: opacity 0.2s ease; background: rgba(10, 100, 255, 0.1); color: var(--brand-primary, #0a64ff); }

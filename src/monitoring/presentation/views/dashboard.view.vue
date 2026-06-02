@@ -30,12 +30,11 @@
           <option value="OPERATIVE">Operativo</option>
           <option value="MAINTENANCE">Mantenimiento</option>
           <option value="INACTIVE">Inactivo</option>
-          <option value="FAULT">Con falla</option>
         </select>
       </div>
       <div class="control-actions">
         <button class="btn-secondary" @click="resetFilters">Limpiar</button>
-        <button class="btn-primary" @click="loadSensors">Refrescar</button>
+        <button class="btn-map" @click="showSensorMap = true">Mapa de Sensores</button>
         <button class="btn-firmware" @click="checkFirmwareUpdate">Actualizar FW</button>
       </div>
     </section>
@@ -70,6 +69,11 @@
       cancel-text="Cancelar"
       @confirm="onFirmwareConfirm"
     />
+
+    <SensorMapDialog
+      v-model:visible="showSensorMap"
+      :sensors="sensors"
+    />
   </div>
 </template>
 
@@ -78,6 +82,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useSensorMonitoringStore } from '../../application/sensor-monitoring.store.js';
 import { SensorMonitoringApi } from '../../infrastructure/sensor-monitoring-api.js';
 import SensorCard from '../components/sensor-card.vue';
+import SensorMapDialog from '../components/sensor-map-dialog.vue';
 import ConfirmDialog from '../../../shared/presentation/components/confirm-dialog.vue';
 import { notify } from '../../../shared/infrastructure/notify.js';
 
@@ -86,6 +91,7 @@ const store = useSensorMonitoringStore();
 const searchQuery = ref('');
 const statusFilter = ref('ALL');
 const lastRefreshLabel = ref('Sin actualización');
+const showSensorMap = ref(false);
 const showFirmwareDialog = ref(false);
 const firmwareDialogMessage = ref('');
 const pendingFirmwareVersion = ref('');
@@ -210,11 +216,12 @@ onMounted(async () => {
 .control-group label { font-size: 0.9rem; font-weight: 700; color: var(--text-strong, #0f172a); }
 .control-group input, .control-group select { width: 100%; border: 1px solid var(--border-color, rgba(148, 163, 184, 0.28)); border-radius: 14px; padding: 0.9rem 1rem; font: inherit; background: rgba(255, 255, 255, 0.9); color: var(--text-strong, #0f172a); box-sizing: border-box; }
 .control-actions { display: flex; gap: 0.75rem; align-items: end; flex-wrap: wrap; }
-.btn-primary, .btn-secondary, .btn-firmware { border: none; border-radius: 14px; padding: 0.9rem 1rem; font: inherit; font-weight: 700; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; }
-.btn-primary:hover, .btn-secondary:hover, .btn-firmware:hover { transform: translateY(-1px); }
+.btn-primary, .btn-secondary, .btn-firmware, .btn-map { border: none; border-radius: 14px; padding: 0.9rem 1rem; font: inherit; font-weight: 700; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; }
+.btn-primary:hover, .btn-secondary:hover, .btn-firmware:hover, .btn-map:hover { transform: translateY(-1px); }
 .btn-primary { background: linear-gradient(135deg, var(--brand-primary, #0a64ff), var(--brand-secondary, #6c5ce7)); color: white; }
 .btn-secondary { background: rgba(10, 100, 255, 0.1); color: var(--brand-primary, #0a64ff); }
 .btn-firmware { background: linear-gradient(135deg, #0a9b61, #059669); color: white; }
+.btn-map { background: linear-gradient(135deg, #0a64ff, #6c5ce7); color: white; }
 .table-surface { padding: 1.25rem; }
 .table-meta { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; color: var(--text-muted, #64748b); }
 .sensor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
