@@ -2,24 +2,21 @@
   <div class="page-shell home-shell">
     <section class="hero-card">
       <div class="hero-copy">
-        <span class="eyebrow">Dashboard Global</span>
-        <h1>Resumen General CatchTrap</h1>
-        <p>
-          Vista de alto nivel del estado del sistema inteligente de detección y control de tráfico.
-          Desde aquí puedes monitorear rápidamente el pulso de la ciudad.
-        </p>
+        <span class="eyebrow">{{ $t('home.eyebrow') }}</span>
+        <h1>{{ $t('home.title') }}</h1>
+        <p>{{ $t('home.description') }}</p>
 
         <div class="hero-actions">
-          <router-link to="/monitoring" class="btn-primary">Ir a Monitoreo (Detalle)</router-link>
-          <router-link to="/infractions" class="btn-secondary">Validar Infracciones</router-link>
+          <router-link to="/monitoring" class="btn-primary">{{ $t('home.goToMonitoring') }}</router-link>
+          <router-link to="/infractions" class="btn-secondary">{{ $t('home.validateInfractions') }}</router-link>
         </div>
       </div>
 
       <div class="hero-visual">
         <div class="visual-panel">
-          <span>Salud de la Red</span>
-          <strong>{{ operativeSensors }} / {{ totalSensors }} Sensores</strong>
-          <p>Operando en tiempo real.</p>
+          <span>{{ $t('home.networkHealth') }}</span>
+          <strong>{{ $t('home.operativeSensors', { operative: operativeSensors, total: totalSensors }) }}</strong>
+          <p>{{ $t('home.realTimeOperation') }}</p>
           <div class="progress-bar-bg">
             <div class="progress-bar-fill" :style="{ width: sensorHealthPercent + '%' }"></div>
           </div>
@@ -27,23 +24,23 @@
 
         <div class="mini-grid">
           <article>
-            <span>Infracciones Totales</span>
+            <span>{{ $t('home.totalInfractions') }}</span>
             <strong>{{ totalInfractions }}</strong>
-            <router-link to="/infractions" class="shortcut-link">Revisar &rarr;</router-link>
+            <router-link to="/infractions" class="shortcut-link">{{ $t('home.review') }}</router-link>
           </article>
           <article>
-            <span>Pendientes Validación</span>
+            <span>{{ $t('home.pendingValidation') }}</span>
             <strong class="text-warning">{{ pendingInfractions }}</strong>
           </article>
           <article>
-            <span>Reportes Generados</span>
+            <span>{{ $t('home.generatedReports') }}</span>
             <strong>{{ totalReports }}</strong>
-            <router-link to="/analytics" class="shortcut-link">Ver analítica &rarr;</router-link>
+            <router-link to="/analytics" class="shortcut-link">{{ $t('home.viewAnalytics') }}</router-link>
           </article>
           <article>
-            <span>Portal Ciudadano</span>
-            <strong>Activo</strong>
-            <router-link to="/citizen" class="shortcut-link">Consultar multas &rarr;</router-link>
+            <span>{{ $t('home.citizenPortal') }}</span>
+            <strong>{{ $t('home.active') }}</strong>
+            <router-link to="/citizen" class="shortcut-link">{{ $t('home.checkFines') }}</router-link>
           </article>
         </div>
       </div>

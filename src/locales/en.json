@@ -1,4 +1,12 @@
 {
+  "toolbar": {
+    "home": "Home",
+    "monitoring": "Monitoring",
+    "infractions": "Infractions",
+    "citizen": "Citizen",
+    "analytics": "Analytics",
+    "brandTag": "Frontend sandbox"
+  },
   "option": {
     "home": "Home",
     "about": "About"
@@ -13,7 +21,23 @@
     "content": "CatchTrap is a technological solution to promote road safety using smart systems and edge computing."
   },
   "home": {
-    "title": "Welcome",
+    "eyebrow": "Global Dashboard",
+    "title": "CatchTrap General Summary",
+    "description": "High-level view of the intelligent traffic detection and control system status. From here you can quickly monitor the pulse of the city.",
+    "goToMonitoring": "Go to Monitoring (Detail)",
+    "validateInfractions": "Validate Infractions",
+    "networkHealth": "Network Health",
+    "operativeSensors": "{operative} / {total} Sensors",
+    "realTimeOperation": "Operating in real time.",
+    "totalInfractions": "Total Infractions",
+    "review": "Review →",
+    "pendingValidation": "Pending Validation",
+    "generatedReports": "Generated Reports",
+    "viewAnalytics": "View analytics →",
+    "citizenPortal": "Citizen Portal",
+    "active": "Active",
+    "checkFines": "Check fines →",
+    "welcome": "Welcome",
     "content": "Welcome to CatchTrap."
   },
   "page-not-found": {
