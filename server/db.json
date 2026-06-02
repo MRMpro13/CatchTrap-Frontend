@@ -6,7 +6,9 @@
       "status": "OPERATIVE",
       "lastPing": "2023-10-27T10:00:00Z",
       "battery": 95,
-      "firmware": "1.2.0"
+      "firmware": "1.2.0",
+      "latitude": -12.093,
+      "longitude": -77.005
     },
     {
       "id": "SENS-002",
@@ -14,7 +16,9 @@
       "status": "MAINTENANCE",
       "lastPing": "2023-10-27T09:30:00Z",
       "battery": 45,
-      "firmware": "1.1.5"
+      "firmware": "1.1.5",
+      "latitude": -12.110,
+      "longitude": -77.025
     },
     {
       "id": "SENS-003",
@@ -22,7 +26,9 @@
       "status": "OPERATIVE",
       "lastPing": "2023-11-05T14:00:00Z",
       "battery": 80,
-      "firmware": "1.2.0"
+      "firmware": "1.2.0",
+      "latitude": -12.078,
+      "longitude": -77.045
     },
     {
       "id": "SENS-004",
@@ -30,7 +36,89 @@
       "status": "INACTIVE",
       "lastPing": "2023-11-01T07:45:00Z",
       "battery": 15,
-      "firmware": "1.0.0"
+      "firmware": "1.0.0",
+      "latitude": -12.130,
+      "longitude": -77.015
+    },
+    {
+      "id": "SENS-005",
+      "location": "Av. La Marina - Cuadra 20",
+      "status": "OPERATIVE",
+      "lastPing": "2026-06-01T14:30:00Z",
+      "battery": 72,
+      "firmware": "1.2.0",
+      "latitude": -12.065,
+      "longitude": -77.080
+    },
+    {
+      "id": "SENS-006",
+      "location": "Jr. de la Unión - Centro",
+      "status": "MAINTENANCE",
+      "lastPing": "2026-05-30T11:15:00Z",
+      "battery": 34,
+      "firmware": "1.1.0",
+      "latitude": -12.112,
+      "longitude": -77.038
+    },
+    {
+      "id": "SENS-007",
+      "location": "Av. Angamos - Cuadra 8",
+      "status": "OPERATIVE",
+      "lastPing": "2026-06-02T08:00:00Z",
+      "battery": 88,
+      "firmware": "1.2.0",
+      "latitude": -12.088,
+      "longitude": -77.060
+    },
+    {
+      "id": "SENS-008",
+      "location": "Panamericana Sur - Km 25",
+      "status": "INACTIVE",
+      "lastPing": "2026-05-28T06:45:00Z",
+      "battery": 5,
+      "firmware": "1.0.5",
+      "latitude": -12.145,
+      "longitude": -76.990
+    },
+    {
+      "id": "SENS-009",
+      "location": "Av. Benavides - Cuadra 15",
+      "status": "OPERATIVE",
+      "lastPing": "2026-06-02T09:20:00Z",
+      "battery": 91,
+      "firmware": "1.2.0",
+      "latitude": -12.098,
+      "longitude": -77.050
+    },
+    {
+      "id": "SENS-010",
+      "location": "C. Las Begonias - Oficinas",
+      "status": "INACTIVE",
+      "lastPing": "2026-05-25T16:00:00Z",
+      "battery": 22,
+      "firmware": "1.1.0",
+      "latitude": -12.125,
+      "longitude": -77.010
+    },
+    {
+      "id": "SENS-011",
+      "location": "Av. Universitaria - Cuadra 12",
+      "status": "OPERATIVE",
+      "lastPing": "2026-06-01T22:10:00Z",
+      "battery": 67,
+      "firmware": "1.2.0",
+      "latitude": -12.075,
+      "longitude": -77.070
+    },
+    {
+      "id": "SENS-012",
+      "location": "Carretera Central - Ate",
+      "status": "MAINTENANCE",
+      "lastPing": "2026-05-29T13:30:00Z",
+      "battery": 41,
+      "firmware": "1.1.5",
+      "latitude": -12.135,
+      "longitude": -76.985
     }
   ],
   "infractions": [

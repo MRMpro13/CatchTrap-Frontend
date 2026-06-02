@@ -16,18 +16,14 @@
 
     <div class="sensor-card__footer">
       <button class="btn-action" @click="handleAction('reboot')" :disabled="sensor.status === 'INACTIVE'">
-        Reiniciar Nodo
-      </button>
-      <button class="btn-action btn-outline" @click="handleAction('update')" :disabled="sensor.status === 'FAULT'">
-        Actualizar FW
+        Actualizar Nodo
       </button>
     </div>
   </article>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { notify } from '../../../shared/infrastructure/notify.js';
+
 
 const props = defineProps({
   sensor: {
@@ -36,14 +32,12 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['update-ping']);
+
 const formatDate = (value) => value ? new Date(value).toLocaleString() : '—';
 
-const handleAction = (action) => {
-  if (action === 'reboot') {
-    notify(`Comando de reinicio enviado al sensor ${props.sensor.id}.`, 'info', 'Reiniciando');
-  } else if (action === 'update') {
-    notify(`Descargando e instalando firmware en ${props.sensor.id}...`, 'info', 'Actualización OTA');
-  }
+const handleAction = () => {
+  emit('update-ping', props.sensor.id);
 };
 </script>
 
@@ -58,11 +52,10 @@ const handleAction = (action) => {
 .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
 .operative { background: rgba(10, 167, 103, 0.12); color: #0a9b61; }
 .maintenance { background: rgba(255, 183, 77, 0.18); color: #b36a00; }
-.inactive, .fault { background: rgba(244, 67, 54, 0.12); color: #c62828; }
+.inactive { background: rgba(244, 67, 54, 0.12); color: #c62828; }
 
 .sensor-card__footer { margin-top: auto; padding-top: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .btn-action { flex: 1; border: none; border-radius: 12px; padding: 0.65rem; font: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: opacity 0.2s ease; background: rgba(10, 100, 255, 0.1); color: var(--brand-primary, #0a64ff); }
 .btn-action:hover { opacity: 0.8; }
 .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-outline { background: transparent; border: 1px solid rgba(10, 100, 255, 0.2); color: var(--text-muted, #64748b); }
 </style>
