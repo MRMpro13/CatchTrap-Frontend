@@ -1,21 +1,23 @@
 import axios from "axios";
 
-const platformApi = import.meta.env.VITE_CATCHTRAP_API_URL || "http://localhost:3000/api/v1";
+const platformApi = import.meta.env.VITE_CATCHTRAP_API_URL || "https://catchtrap-mockapi.azure-api.net/api/v1";
+const platformApiKey = import.meta.env.VITE_CATCHTRAP_API_KEY;
 
-/**
- * Shared infrastructure base class that configures the HTTP client.
- * @class BaseApi
- */
 export class BaseApi {
   #http;
 
   constructor() {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (platformApiKey) {
+      headers['Ocp-Apim-Subscription-Key'] = platformApiKey;
+    }
+
     this.#http = axios.create({
       baseURL: platformApi,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
+      headers
     });
   }
 
