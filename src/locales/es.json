@@ -1,0 +1,27 @@
+{
+  "option": {
+    "home": "Inicio",
+    "about": "Acerca de"
+  },
+  "authoring-phrase": {
+    "intro": "Hecho con",
+    "use": "utilizando",
+    "author": "por el Equipo de Desarrollo de {brand}"
+  },
+  "about": {
+    "title": "Acerca de Nosotros",
+    "content": "CatchTrap es una solución tecnológica para promover la seguridad vial usando sistemas inteligentes y edge computing."
+  },
+  "home": {
+    "title": "Inicio",
+    "content": "Bienvenido a CatchTrap."
+  },
+  "page-not-found": {
+    "title": "Página no encontrada",
+    "content": "La ruta {unavailable-route} no está disponible.",
+    "go-home": "Ir al Inicio"
+  },
+  "errors": {
+    "occurred": "Ocurrieron errores"
+  }
+}

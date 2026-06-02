@@ -1,0 +1,122 @@
+{
+  "sensors": [
+    {
+      "id": "SENS-001",
+      "location": "Av. Javier Prado - Cuadra 10",
+      "status": "OPERATIVE",
+      "lastPing": "2023-10-27T10:00:00Z",
+      "battery": 95,
+      "firmware": "1.2.0"
+    },
+    {
+      "id": "SENS-002",
+      "location": "Av. Arequipa - Cuadra 5",
+      "status": "MAINTENANCE",
+      "lastPing": "2023-10-27T09:30:00Z",
+      "battery": 45,
+      "firmware": "1.1.5"
+    },
+    {
+      "id": "SENS-003",
+      "location": "Av. Brasil - Cerca al puente",
+      "status": "OPERATIVE",
+      "lastPing": "2023-11-05T14:00:00Z",
+      "battery": 80,
+      "firmware": "1.2.0"
+    },
+    {
+      "id": "SENS-004",
+      "location": "C. Los Jazmines - Entrada",
+      "status": "INACTIVE",
+      "lastPing": "2023-11-01T07:45:00Z",
+      "battery": 15,
+      "firmware": "1.0.0"
+    }
+  ],
+  "infractions": [
+    {
+      "id": "INF-001",
+      "sensorId": "SENS-001",
+      "plate": "ABC-123",
+      "speed": 85,
+      "limit": 60,
+      "timestamp": "2023-10-27T08:15:00Z",
+      "status": "PENDING_VALIDATION"
+    },
+    {
+      "id": "INF-002",
+      "sensorId": "SENS-003",
+      "plate": "XYZ-987",
+      "speed": 102,
+      "limit": 60,
+      "timestamp": "2023-11-05T14:30:00Z",
+      "status": "VALIDATED"
+    },
+    {
+      "id": "INF-003",
+      "sensorId": "SENS-001",
+      "plate": "LMN-456",
+      "speed": 70,
+      "limit": 60,
+      "timestamp": "2023-11-06T09:10:00Z",
+      "status": "REJECTED"
+    },
+    {
+      "id": "INF-004",
+      "sensorId": "SENS-004",
+      "plate": "ABC-123",
+      "speed": 120,
+      "limit": 80,
+      "timestamp": "2023-11-07T18:45:00Z",
+      "status": "VALIDATED"
+    }
+  ],
+  "tickets": [
+    {
+      "id": "TICK-001",
+      "infractionId": "INF-001",
+      "plate": "ABC-123",
+      "amount": 350.5,
+      "status": "UNPAID",
+      "issuedAt": "2023-10-27T08:20:00Z"
+    },
+    {
+      "id": "TICK-002",
+      "infractionId": "INF-002",
+      "plate": "XYZ-987",
+      "amount": 420,
+      "status": "PAID",
+      "issuedAt": "2023-11-05T14:40:00Z"
+    },
+    {
+      "id": "TICK-003",
+      "infractionId": "INF-004",
+      "plate": "ABC-123",
+      "amount": 500,
+      "status": "UNPAID",
+      "issuedAt": "2023-11-07T18:50:00Z"
+    },
+    {
+      "id": "TICK-1780377423863",
+      "infractionId": "INF-004",
+      "plate": "ABC-123",
+      "amount": 400,
+      "status": "UNPAID",
+      "issuedAt": "2026-06-02T05:17:03.863Z"
+    }
+  ],
+  "reports": [
+    {
+      "id": "REP-001",
+      "title": "Reporte Mensual Octubre",
+      "totalInfractions": 150,
+      "date": "2023-10-01"
+    },
+    {
+      "id": "REP-002",
+      "title": "Reporte Primera Semana Noviembre",
+      "totalInfractions": 23,
+      "date": "2023-11-07"
+    }
+  ]
+}

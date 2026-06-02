@@ -1,0 +1,27 @@
+{
+  "option": {
+    "home": "Home",
+    "about": "About"
+  },
+  "authoring-phrase": {
+    "intro": "Made with",
+    "use": "using",
+    "author": "by {brand} Developer Team"
+  },
+  "about": {
+    "title": "About Us",
+    "content": "CatchTrap is a technological solution to promote road safety using smart systems and edge computing."
+  },
+  "home": {
+    "title": "Welcome",
+    "content": "Welcome to CatchTrap."
+  },
+  "page-not-found": {
+    "title": "Page Not Found",
+    "content": "The path {unavailable-route} is not available.",
+    "go-home": "Go Home"
+  },
+  "errors": {
+    "occurred": "Errors occurred"
+  }
+}
