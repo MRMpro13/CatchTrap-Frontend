@@ -53,7 +53,6 @@ onMounted(async () => {
 });
 
 const handleDownload = (report) => {
-  // In a real app, this would trigger a file download or API call
   console.log(`Downloading report ${report.id}`);
   alert(t('analytics.downloading', { title: report.title }));
 };

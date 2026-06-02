@@ -173,7 +173,6 @@ const latestReport = computed(() => analyticsStore.reports[0] || null);
   padding-bottom: 2.5rem;
 }
 
-/* ─── Hero strip ─── */
 .hero-strip {
   display: flex;
   justify-content: space-between;
@@ -235,7 +234,6 @@ const latestReport = computed(() => analyticsStore.reports[0] || null);
   transform: translateY(-2px);
 }
 
-/* ─── KPI row ─── */
 .kpi-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -336,7 +334,6 @@ const latestReport = computed(() => analyticsStore.reports[0] || null);
   transition: width 0.5s ease;
 }
 
-/* ─── Module cards row ─── */
 .module-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -404,7 +401,6 @@ const latestReport = computed(() => analyticsStore.reports[0] || null);
   text-decoration: underline;
 }
 
-/* ─── Responsive ─── */
 @media (max-width: 1100px) {
   .kpi-row, .module-row {
     grid-template-columns: repeat(2, 1fr);
