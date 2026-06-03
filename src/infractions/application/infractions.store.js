@@ -28,8 +28,8 @@ export const useInfractionsStore = defineStore('infractions', () => {
       const infraction = infractions.value.find(i => i.id === id);
       if (!infraction) throw new Error("Infraction not found");
 
-      await infractionsApi.updateInfractionStatus(id, status);
-      infraction.status = status;
+      const updated = await infractionsApi.updateInfraction(id, { ...infraction, status });
+      infraction.status = updated.data.status;
 
       if (status === 'VALIDATED') {
         const over = Math.max(0, (infraction.speed || 0) - (infraction.limit || 0));

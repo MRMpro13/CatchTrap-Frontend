@@ -2,35 +2,35 @@
   <div class="page-shell search-portal">
     <section class="page-hero surface">
       <div class="hero-copy">
-        <span class="eyebrow">Portal del Ciudadano</span>
-        <h1>Consulta de Multas</h1>
-        <p>Verifica rápidamente si tu vehículo cuenta con infracciones pendientes de pago en la red CatchTrap.</p>
+        <span class="eyebrow">{{ $t('citizen.eyebrow') }}</span>
+        <h1>{{ $t('citizen.title') }}</h1>
+        <p>{{ $t('citizen.description') }}</p>
       </div>
     </section>
 
     <section class="surface panel-controls">
       <div class="search-form">
         <div class="control-group search-input-group">
-          <label for="plate">Número de Placa</label>
-          <input id="plate" v-model="plateQuery" type="text" placeholder="Ej: ABC-123" @keyup.enter="searchTickets" />
+          <label for="plate">{{ $t('citizen.plateLabel') }}</label>
+          <input id="plate" v-model="plateQuery" type="text" :placeholder="$t('citizen.platePlaceholder')" @keyup.enter="searchTickets" />
         </div>
         <button class="btn-primary btn-search" @click="searchTickets" :disabled="loading">
-          {{ loading ? 'Buscando...' : 'Consultar' }}
+          {{ loading ? $t('citizen.searching') : $t('citizen.search') }}
         </button>
       </div>
     </section>
 
     <section class="results-surface">
-      <div v-if="loading" class="state-box">Buscando información en el sistema...</div>
+      <div v-if="loading" class="state-box">{{ $t('citizen.searchingMessage') }}</div>
 
       <div v-else-if="errors.length" class="state-box state-error">
-        Ocurrió un error al consultar el sistema. Por favor, intenta de nuevo más tarde.
+        {{ $t('citizen.searchError') }}
       </div>
 
       <div v-else-if="searched" class="results-container">
         <div class="table-meta mb-3">
-          <h3 v-if="tickets.length === 0">No se encontraron multas registradas para la placa <strong>{{ lastSearchedPlate }}</strong>.</h3>
-          <h3 v-else>Se encontraron {{ tickets.length }} multa(s) para la placa <strong>{{ lastSearchedPlate }}</strong>:</h3>
+          <h3 v-if="tickets.length === 0">{{ $t('citizen.noResults', { plate: lastSearchedPlate }) }}</h3>
+          <h3 v-else>{{ $t('citizen.resultsFound', { count: tickets.length, plate: lastSearchedPlate }) }}</h3>
         </div>
 
         <div class="ticket-grid" v-if="tickets.length">
@@ -49,11 +49,13 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useCitizenPortalStore } from '../../application/citizen-portal.store.js';
 import { notify } from '../../../shared/infrastructure/notify.js';
 import TicketCard from '../components/ticket-card.vue';
 
 const store = useCitizenPortalStore();
+const { t } = useI18n();
 
 const plateQuery = ref('');
 const lastSearchedPlate = ref('');

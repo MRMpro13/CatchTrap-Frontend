@@ -1,21 +1,21 @@
 <template>
   <div class="ticket-card">
     <div class="ticket-card__header">
-      <p class="ticket-id"><strong>N° Ticket:</strong> {{ ticket.id }}</p>
+      <p class="ticket-id"><strong>{{ $t('ticketCard.ticketNumber') }}:</strong> {{ ticket.id }}</p>
       <span :class="['status-pill', ticket.status.toLowerCase()]">
-        {{ ticket.status === 'UNPAID' ? 'Pendiente de pago' : 'Pagado' }}
+        {{ ticket.status === 'UNPAID' ? $t('ticketCard.unpaid') : $t('ticketCard.paid') }}
       </span>
     </div>
     <div class="ticket-card__body">
-      <p><strong>Fecha Emisión:</strong> {{ formattedDate }}</p>
-      <p><strong>Monto:</strong> S/. {{ ticket.amount.toFixed(2) }}</p>
+      <p><strong>{{ $t('ticketCard.issueDate') }}:</strong> {{ formattedDate }}</p>
+      <p><strong>{{ $t('ticketCard.amount') }}:</strong> S/. {{ ticket.amount.toFixed(2) }}</p>
     </div>
     <div class="ticket-card__footer">
       <button v-if="ticket.status === 'UNPAID'" class="btn-pay" @click="$emit('pay', ticket.id)" :disabled="processing">
-        {{ processing ? 'Procesando...' : 'Pagar Online' }}
+        {{ processing ? $t('ticketCard.processing') : $t('ticketCard.payOnline') }}
       </button>
       <button v-if="ticket.status === 'PAID'" class="btn-download" @click="downloadReceipt">
-        Descargar Recibo
+        {{ $t('ticketCard.downloadReceipt') }}
       </button>
     </div>
   </div>
@@ -23,6 +23,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { notify } from '../../../shared/infrastructure/notify.js';
 
 const props = defineProps({
@@ -43,7 +44,7 @@ const formattedDate = computed(() => {
 });
 
 const downloadReceipt = () => {
-  notify(`Descargando comprobante de pago para el ticket ${props.ticket.id}.`, 'info', 'Descarga Iniciada');
+  notify(t('ticketCard.downloadStarted', { id: props.ticket.id }), 'info', t('ticketCard.downloadTitle'));
 };
 </script>
 

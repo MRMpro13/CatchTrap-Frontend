@@ -24,6 +24,10 @@ export class BaseEndpoint {
     return this.http.put(`${this.endpointPath}/${id}`, resource);
   }
 
+  patch(id, resource) {
+    return this.http.patch(`${this.endpointPath}/${id}`, resource);
+  }
+
   delete(id) {
     return this.http.delete(`${this.endpointPath}/${id}`);
   }
