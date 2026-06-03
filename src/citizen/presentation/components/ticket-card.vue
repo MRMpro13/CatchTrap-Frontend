@@ -36,7 +36,7 @@ const props = defineProps({
   }
 });
 
-defineEmits(['pay']);
+const emit = defineEmits(['pay']);
 
 const formattedDate = computed(() => {
   return props.ticket.issuedAt ? new Date(props.ticket.issuedAt).toLocaleString() : '—';

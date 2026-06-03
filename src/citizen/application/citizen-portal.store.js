@@ -18,7 +18,6 @@ export const useCitizenPortalStore = defineStore('citizen', () => {
       tickets.value = TicketAssembler.toEntitiesFromResponse(response);
     } catch (error) {
       errors.value.push(error);
-      throw error;
     } finally {
       loading.value = false;
     }
@@ -26,22 +25,15 @@ export const useCitizenPortalStore = defineStore('citizen', () => {
 
   async function payTicket(id) {
     try {
-      await citizenApi.payTicket(id);
+      await citizenApi.payTicket(id, { status: 'PAID' });
       const ticketIndex = tickets.value.findIndex(t => t.id === id);
       if (ticketIndex !== -1) {
         tickets.value[ticketIndex].status = 'PAID';
       }
     } catch (error) {
       errors.value.push(error);
-      throw error;
     }
   }
 
-  return {
-    tickets,
-    errors,
-    loading,
-    searchTickets,
-    payTicket
-  };
+  return { tickets, errors, loading, searchTickets, payTicket };
 });

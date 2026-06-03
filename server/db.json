@@ -103,6 +103,16 @@
       "amount": 400,
       "status": "UNPAID",
       "issuedAt": "2026-06-02T05:17:03.863Z"
+    },
+    {
+      "id": "TICK-004",
+      "infractionId": "INF-003",
+      "plate": "LMN-456",
+      "amount": 100,
+      "speed": 70,
+      "limit": 60,
+      "status": "UNPAID",
+      "issuedAt": "2023-11-06T09:15:00Z"
     }
   ],
   "reports": [
