@@ -8,13 +8,23 @@ import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
  */
 export class SensorMonitoringApi extends BaseApi {
   #sensorsEndpoint;
+  #firmwareEndpoint;
 
   constructor() {
     super();
     this.#sensorsEndpoint = new BaseEndpoint(this, "/sensors");
+    this.#firmwareEndpoint = new BaseEndpoint(this, "/firmware");
   }
 
   getAllSensors() {
     return this.#sensorsEndpoint.getAll();
+  }
+
+  getLatestFirmwareVersion() {
+    return this.#firmwareEndpoint.getAll();
+  }
+
+  patchSensor(id, data) {
+    return this.#sensorsEndpoint.patch(id, data);
   }
 }

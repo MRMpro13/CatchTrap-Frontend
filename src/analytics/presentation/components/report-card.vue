@@ -2,11 +2,11 @@
   <article class="report-card">
     <div class="report-card__header">
       <span class="eyebrow small">{{ report.id }}</span>
-      <button class="btn-download" @click="$emit('download', report)">Descargar PDF</button>
+      <button class="btn-download" @click="$emit('download', report)">{{ $t('reportCard.download') }}</button>
     </div>
     <h3>{{ report.title }}</h3>
-    <p><strong>Fecha:</strong> {{ report.date }}</p>
-    <p><strong>Total de infracciones:</strong> {{ report.totalInfractions }}</p>
+    <p><strong>{{ $t('reportCard.date') }}:</strong> {{ report.date }}</p>
+    <p><strong>{{ $t('reportCard.total') }}:</strong> {{ report.totalInfractions }}</p>
   </article>
 </template>
 
@@ -28,6 +28,6 @@ defineEmits(['download']);
 .report-card p { margin: 0.35rem 0; color: #64748b; }
 .btn-download { border: none; border-radius: 14px; padding: 0.75rem 0.95rem; font: inherit; font-weight: 700; cursor: pointer; background: rgba(10, 100, 255, 0.1); color: #0a64ff; transition: opacity 0.2s ease; }
 .btn-download:hover { opacity: 0.85; }
-.eyebrow { display: inline-flex; padding: 0.35rem 0.75rem; border-radius: 999px; background: rgba(10, 100, 255, 0.12); color: #0a64ff; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.eyebrow { display: inline-flex; padding: 0.35rem 0.75rem; border-radius: 999px; background: rgba(10, 100, 255, 0.12); color: #0a64ff; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
 .eyebrow.small { font-size: 0.72rem; }
 </style>

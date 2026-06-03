@@ -8,13 +8,19 @@ import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
  */
 export class AnalyticsApi extends BaseApi {
   #reportsEndpoint;
+  #infractionsEndpoint;
 
   constructor() {
     super();
     this.#reportsEndpoint = new BaseEndpoint(this, "/reports");
+    this.#infractionsEndpoint = new BaseEndpoint(this, "/infractions");
   }
 
   getReports() {
     return this.#reportsEndpoint.getAll();
+  }
+
+  getInfractions() {
+    return this.#infractionsEndpoint.getAll();
   }
 }

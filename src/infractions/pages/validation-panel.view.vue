@@ -2,8 +2,8 @@
   <div class="page-shell validation-shell">
     <section class="page-hero surface">
       <div class="hero-copy">
-        <span class="eyebrow">Fiscalización en tiempo real</span>
-        <h1>Panel de Validación de Infracciones</h1>
+        <span class="eyebrow">{{ $t('infractions.eyebrow') }}</span>
+        <h1>{{ $t('infractions.title') }}</h1>
         <p>
           Revisa, filtra y procesa infracciones pendientes con una experiencia clara para pruebas del frontend.
         </p>
@@ -11,11 +11,11 @@
 
       <div class="hero-metrics">
         <article class="metric-card">
-          <span>Pendientes</span>
+          <span>{{ $t('infractions.pending') }}</span>
           <strong>{{ totalInfractions }}</strong>
         </article>
         <article class="metric-card metric-highlight">
-          <span>Página</span>
+          <span>{{ $t('infractions.page') }}</span>
           <strong>{{ currentPage }} / {{ totalPages }}</strong>
         </article>
       </div>
@@ -23,28 +23,28 @@
 
     <section class="surface panel-controls">
       <div class="control-group">
-        <label for="search">Buscar por placa o ID</label>
-        <input id="search" v-model="searchQuery" type="search" placeholder="Ej: ABC-123 o INF-001" />
+        <label for="search">{{ $t('infractions.searchLabel') }}</label>
+        <input id="search" v-model="searchQuery" type="search" :placeholder="$t('infractions.searchPlaceholder')" />
       </div>
 
       <div class="control-group">
-        <label for="status">Filtrar por estado</label>
+        <label for="status">{{ $t('infractions.activityStatusLabel') }}</label>
         <select id="status" v-model="statusFilter">
-          <option value="ALL">Todos</option>
-          <option value="PENDING_VALIDATION">Pendientes</option>
-          <option value="VALIDATED">Validadas</option>
-          <option value="REJECTED">Descartadas</option>
+          <option value="ALL">{{ $t('infractions.activityAll') }}</option>
+          <option value="PENDING_VALIDATION">{{ $t('infractions.statusPending') }}</option>
+          <option value="VALIDATED">{{ $t('infractions.activityValidated') }}</option>
+          <option value="REJECTED">{{ $t('infractions.activityRejected') }}</option>
         </select>
       </div>
 
       <div class="control-actions">
-        <button class="btn-secondary" @click="resetFilters">Limpiar filtros</button>
-        <button class="btn-primary" @click="fetchInfractions">Actualizar</button>
+        <button class="btn-secondary" @click="resetFilters">{{ $t('infractions.clearFilters') }}</button>
+        <button class="btn-primary" @click="fetchInfractions">{{ $t('infractions.refresh') }}</button>
       </div>
     </section>
 
     <section class="surface table-surface">
-      <div v-if="loading" class="state-box">Cargando infracciones...</div>
+      <div v-if="loading" class="state-box">{{ $t('infractions.loading') }}</div>
       <div v-else-if="errorMessage" class="state-box state-error">{{ errorMessage }}</div>
       <div v-else>
         <div class="table-meta">
@@ -56,14 +56,14 @@
           <table class="infractions-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Placa</th>
-                <th>Velocidad</th>
-                <th>Límite</th>
-                <th>Exceso</th>
-                <th>Fecha/Hora</th>
-                <th>Estado</th>
-                <th>Acciones</th>
+                <th>{{ $t('infractions.tableId') }}</th>
+                <th>{{ $t('infractions.tablePlate') }}</th>
+                <th>{{ $t('infractions.tableSpeed') }}</th>
+                <th>{{ $t('infractions.tableLimit') }}</th>
+                <th>{{ $t('infractions.tableExcess') }}</th>
+                <th>{{ $t('infractions.tableDateTime') }}</th>
+                <th>{{ $t('infractions.tableStatus') }}</th>
+                <th>{{ $t('infractions.tableActions') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -82,10 +82,10 @@
                 <td>
                   <div class="action-group">
                     <button class="btn-validate" :disabled="processingId === infraction.id" @click="validate(infraction.id, 'VALIDATED')">
-                      {{ processingId === infraction.id ? 'Procesando...' : 'Validar' }}
+                      {{ processingId === infraction.id ? $t('infractionTable.processing') : $t('infractionTable.validate') }}
                     </button>
                     <button class="btn-reject" :disabled="processingId === infraction.id" @click="validate(infraction.id, 'REJECTED')">
-                      Descartar
+                      {{ $t('infractionTable.reject') }}
                     </button>
                   </div>
                 </td>
@@ -94,19 +94,19 @@
           </table>
         </div>
 
-        <div v-else class="state-box">No hay infracciones que coincidan con los filtros aplicados.</div>
+        <div v-else class="state-box">{{ $t('infractions.noResults') }}</div>
 
         <div class="pagination" v-if="totalPages > 1">
-          <button class="btn-secondary" :disabled="currentPage === 1" @click="currentPage--">Anterior</button>
-          <span>Página {{ currentPage }} de {{ totalPages }}</span>
-          <button class="btn-secondary" :disabled="currentPage === totalPages" @click="currentPage++">Siguiente</button>
+          <button class="btn-secondary" :disabled="currentPage === 1" @click="currentPage--">{{ $t('infractions.previous') }}</button>
+          <span>{{ $t('infractions.pageOf', { current: currentPage, total: totalPages }) }}</span>
+          <button class="btn-secondary" :disabled="currentPage === totalPages" @click="currentPage++">{{ $t('infractions.next') }}</button>
         </div>
       </div>
     </section>
 
     <section class="surface activity-card">
       <div class="card-header">
-        <h2>Última actividad</h2>
+        <h2>{{ $t('infractions.activityTitle') }}</h2>
         <span>{{ lastRefreshLabel }}</span>
       </div>
 
@@ -315,7 +315,8 @@ export default {
 .badge, .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.85rem; font-weight: 700; }
 .badge.low { background: rgba(10, 167, 103, 0.12); color: #0a9b61; }
 .badge.medium { background: rgba(255, 183, 77, 0.18); color: #b36a00; }
-.badge.high, .badge.critical { background: rgba(244, 67, 54, 0.14); color: #c62828; }
+.badge.high { background: rgba(251, 146, 60, 0.14); color: #c2410c; }
+.badge.critical { background: rgba(244, 67, 54, 0.14); color: #c62828; }
 .status-pill.pending_validation { background: rgba(10, 100, 255, 0.12); color: #0a64ff; }
 .status-pill.validated { background: rgba(10, 167, 103, 0.12); color: #0a9b61; }
 .status-pill.rejected { background: rgba(244, 67, 54, 0.12); color: #c62828; }

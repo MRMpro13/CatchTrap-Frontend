@@ -1,8 +1,8 @@
 <template>
   <div class="not-found">
     <h1>404</h1>
-    <p>Página no encontrada</p>
-    <router-link to="/">Volver al inicio</router-link>
+    <p>{{ $t('page-not-found.title') }}</p>
+    <router-link to="/">{{ $t('page-not-found.go-home') }}</router-link>
   </div>
 </template>
 

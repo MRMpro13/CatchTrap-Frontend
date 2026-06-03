@@ -2,27 +2,26 @@
   <div class="page-shell reports-shell">
     <section class="page-hero">
       <div>
-        <span class="eyebrow">Analítica y simulación</span>
-        <h1>Reportes Estadísticos</h1>
-        <p>Una vista más limpia para revisar indicadores y validar la experiencia del frontend.</p>
+        <span class="eyebrow">{{ $t('analytics.eyebrow') }}</span>
+        <h1>{{ $t('analytics.title') }}</h1>
       </div>
 
       <div class="hero-metrics">
         <article class="metric-card">
-          <span>Reportes</span>
+          <span>{{ $t('analytics.reports') }}</span>
           <strong>{{ reports.length }}</strong>
         </article>
         <article class="metric-card metric-highlight">
-          <span>Infracciones registradas</span>
+          <span>{{ $t('analytics.registeredInfractions') }}</span>
           <strong>{{ totalInfractions }}</strong>
         </article>
       </div>
     </section>
 
     <section class="surface reports-surface">
-      <div v-if="loading" class="state-box">Cargando reportes...</div>
-      <div v-else-if="errors.length" class="state-box state-error">Ocurrió un error al cargar los reportes.</div>
-      <div v-else-if="reports.length === 0" class="state-box">No hay reportes disponibles.</div>
+      <div v-if="loading" class="state-box">{{ $t('analytics.loading') }}</div>
+      <div v-else-if="errors.length" class="state-box state-error">{{ $t('analytics.loadError') }}</div>
+      <div v-else-if="reports.length === 0" class="state-box">{{ $t('analytics.noReports') }}</div>
       <div v-else class="reports-grid">
         <report-card
           v-for="report in reports"
@@ -37,10 +36,12 @@
 
 <script setup>
 import { computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useAnalyticsStore } from '../../application/analytics.store.js';
 import ReportCard from '../components/report-card.vue';
 
 const store = useAnalyticsStore();
+const { t } = useI18n();
 
 const reports = computed(() => store.reports);
 const loading = computed(() => store.loading);
@@ -52,9 +53,8 @@ onMounted(async () => {
 });
 
 const handleDownload = (report) => {
-  // In a real app, this would trigger a file download or API call
   console.log(`Downloading report ${report.id}`);
-  alert(`Descargando reporte: ${report.title}`);
+  alert(t('analytics.downloading', { title: report.title }));
 };
 </script>
 
