@@ -60,7 +60,7 @@ const { t } = useI18n();
 const plateQuery = ref('');
 const lastSearchedPlate = ref('');
 const searched = ref(false);
-const processingId = ref('');
+const processingId = ref(null);
 
 const tickets = computed(() => store.tickets);
 const loading = computed(() => store.loading);
@@ -68,34 +68,32 @@ const errors = computed(() => store.errors);
 
 const searchTickets = async () => {
   const query = plateQuery.value.trim().toUpperCase();
-  if (!query) return;
+  if (!query) {
+    notify('Ingrese un número de placa para consultar', 'warn', 'Campo vacío');
+    return;
+  }
 
   searched.value = false;
-  try {
-    await store.searchTickets(query);
-    lastSearchedPlate.value = query;
-    searched.value = true;
+  await store.searchTickets(query);
+  lastSearchedPlate.value = query;
+  searched.value = true;
 
-    if (store.tickets.length > 0) {
-      if (typeof notify === 'function') notify(t('citizen.ticketsFound'), 'info', t('citizen.searchComplete'));
-    }
-  } catch (error) {
-    console.error('Error in search:', error);
-    if (typeof notify === 'function') notify(t('citizen.searchFailed'), 'error', t('citizen.searchErrorTitle'));
+  if (store.errors.length) {
+    notify('Error al consultar multas', 'error', 'Fallo en la consulta');
+  } else if (store.tickets.length > 0) {
+    notify('Multas encontradas exitosamente', 'info', 'Consulta realizada');
   }
 };
 
 const handlePayment = async (id) => {
   processingId.value = id;
-  try {
-    await store.payTicket(id);
-    if (typeof notify === 'function') notify(t('citizen.paymentSuccess', { id }), 'success', t('citizen.paymentConfirm'));
-  } catch (error) {
-    console.error('Payment error:', error);
-    if (typeof notify === 'function') notify(t('citizen.paymentError'), 'error', t('citizen.paymentErrorTitle'));
-  } finally {
-    processingId.value = '';
+  await store.payTicket(id);
+  if (store.errors.length) {
+    notify('Hubo un problema al procesar su pago.', 'error', 'Error de Pago');
+  } else {
+    notify(`Ticket ${id} pagado exitosamente.`, 'success', 'Pago Confirmado');
   }
+  processingId.value = null;
 };
 </script>
 
